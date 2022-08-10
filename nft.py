@@ -71,7 +71,10 @@ def generate_single_image(filepaths, output_filename=None):
     for filepath in filepaths[1:]:
         if filepath.endswith('.png'):
             img = Image.open(os.path.join('assets', filepath))
-            bg.paste(img, (0,0), img)
+            # Image.paste does not work as expected when the background image also contains transparency. 
+            # You need to use real Alpha Compositing.
+            # bg.paste(img, (0,0), img)
+            bg = Image.alpha_composite(bg, img)
     
     # Save the final image into desired location
     if output_filename is not None:
